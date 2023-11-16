@@ -33,7 +33,12 @@ def mean_pooling(model_output, attention_mask):
 def vectorize(text: str) -> np.ndarray:
     encoded_input = tokenizer(text, padding=True, truncation=True, return_tensors="pt")
     model_output = model(**encoded_input)
-    return mean_pooling(model_output, encoded_input["attention_mask"]).detach().numpy()
+    return (
+        mean_pooling(model_output, encoded_input["attention_mask"])
+        .detach()
+        .flatten()
+        .numpy()
+    )
 
 
 def vectorize_batch(text: list) -> np.ndarray:
