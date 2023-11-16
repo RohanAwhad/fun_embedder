@@ -1,7 +1,6 @@
 import torch
 
 torch.set_grad_enabled(False)
-import numpy as np
 import os
 
 from transformers import AutoTokenizer, AutoModel
@@ -30,26 +29,21 @@ def mean_pooling(model_output, attention_mask):
     )
 
 
-def vectorize(text: str) -> np.ndarray:
+def vectorize(text: str) -> torch.Tensor:
     encoded_input = tokenizer(text, padding=True, truncation=True, return_tensors="pt")
     model_output = model(**encoded_input)
     return (
-        mean_pooling(model_output, encoded_input["attention_mask"])
-        .detach()
-        .flatten()
-        .numpy()
+        mean_pooling(model_output, encoded_input["attention_mask"]).detach().flatten()
     )
 
 
-def vectorize_batch(text: list) -> np.ndarray:
+def vectorize_batch(text: list) -> torch.Tensor:
     ret = []
     for i in range(0, len(text), batch_size):
         encoded_input = tokenizer(
             text[i : i + batch_size], padding=True, truncation=True, return_tensors="pt"
         )
         model_output = model(**encoded_input)
-        ret.append(
-            mean_pooling(model_output, encoded_input["attention_mask"]).detach().numpy()
-        )
+        ret.append(mean_pooling(model_output, encoded_input["attention_mask"]).detach())
 
-    return np.concatenate(ret, axis=0)
+    return torch.concatenate(ret, axis=0)
