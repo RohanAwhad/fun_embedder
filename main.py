@@ -1,4 +1,4 @@
-import text_vectorization
+from src import text_vectorization
 
 from fastapi import FastAPI
 from typing import List, Dict
