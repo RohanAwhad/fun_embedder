@@ -2,7 +2,7 @@ FROM public.ecr.aws/lambda/python:3.11
 
 COPY models/all-mpnet-base-v2 ${LAMBDA_TASK_ROOT}/models/all-mpnet-base-v2/
 
-COPY requirements.txt ${LAMBDA_TASK_ROOT}/requirements.txt
+COPY requirements.lambda.txt ${LAMBDA_TASK_ROOT}/requirements.txt
 RUN pip install -r ${LAMBDA_TASK_ROOT}/requirements.txt
 
 COPY src ${LAMBDA_TASK_ROOT}/src
